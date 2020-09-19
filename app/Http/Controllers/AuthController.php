@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
-    public $successStatus = 200;
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -30,7 +29,7 @@ class AuthController extends Controller
         $user = User::create($input);
         $success['token'] =  $user->createToken('MyApp')->accessToken;
 
-        return response()->json(['success' => $success], $this->successStatus);
+        return response()->json(['success' => $success], 200);
     }
     public function login(Request $request)
     {
@@ -38,7 +37,7 @@ class AuthController extends Controller
             $user = Auth::user();
             $success = $user->createToken('MyApp')->accessToken;
 
-            return response()->json($success, $this->successStatus);
+            return response()->json($success, 200);
         } else {
             return response()->json(['error' => 'Unauthorised'], 401);
         }
