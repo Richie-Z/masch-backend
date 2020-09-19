@@ -45,7 +45,7 @@ class ScheduleController extends Controller
         if (!empty($request->branch)) {
             $schedule->where('studio_id', '=', $request->branch);
         }
-        if ($request->has('start')) {
+        if (!empty($request->start)) {
             $schedule->whereDate('start', '=', $request->start);
         }
         return $schedule->select(DB::raw('movies.name as name, schedules.price, GROUP_CONCAT(CAST(schedules.start AS TIME(0))) AS start_time'))
