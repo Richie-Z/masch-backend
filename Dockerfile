@@ -2,10 +2,10 @@ FROM docker.io/library/composer:2 AS composer-bin
 FROM docker.io/library/php:7.2-cli-alpine AS vendor
 WORKDIR /app
 COPY --from=composer-bin /usr/bin/composer /usr/bin/composer
-RUN apk add --no-cache oniguruma-dev \
-    && docker-php-ext-install mbstring pdo_mysql \
+RUN apk add --no-cache oniguruma-dev postgresql-dev \
+    && docker-php-ext-install mbstring pdo_mysql pdo_pgsql \
     && apk add --no-cache unzip \
-    && apk del oniguruma-dev
+    && apk del oniguruma-dev postgresql-dev
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --no-interaction
 COPY . .
@@ -14,10 +14,10 @@ RUN php artisan storage:link
 
 FROM docker.io/library/php:7.2-fpm-alpine AS runtime
 WORKDIR /app
-RUN apk add --no-cache nginx supervisor gettext curl oniguruma-dev \
-    && docker-php-ext-install mbstring pdo_mysql \
+RUN apk add --no-cache nginx supervisor gettext curl libpq oniguruma-dev postgresql-dev \
+    && docker-php-ext-install mbstring pdo_mysql pdo_pgsql \
     && apk add --no-cache unzip \
-    && apk del oniguruma-dev
+    && apk del oniguruma-dev postgresql-dev
 COPY --from=vendor /app /app
 
 COPY .containerize/nginx-fpm.conf.template /etc/nginx/nginx.conf.template
