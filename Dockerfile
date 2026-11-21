@@ -33,4 +33,3 @@ USER www-data
 EXPOSE 8080
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["supervisord", "-c", "/etc/supervisord.conf"]
-HEALTHCHECK --interval=10s --timeout=3s --start-period=30s --retries=3 CMD ["sh", "-c", "case \"$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:${PORT}/)\" in 2*|3*) exit 0;; *) exit 1;; esac"]
