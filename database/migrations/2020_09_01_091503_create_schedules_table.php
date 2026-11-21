@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateSchedulesTable extends Migration
@@ -22,8 +23,11 @@ class CreateSchedulesTable extends Migration
             $table->decimal('price',13,2);
             $table->timestamps();
 
-            $table->foreign('movie_id')->references('id')->on('movies');
             $table->foreign('studio_id')->references('id')->on('studios');
+
+            if (DB::getDriverName() === 'mysql') {
+                $table->foreign('movie_id')->references('id')->on('movies');
+            }
         });
     }
 

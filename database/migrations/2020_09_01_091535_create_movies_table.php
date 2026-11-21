@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateMoviesTable extends Migration
@@ -20,6 +21,12 @@ class CreateMoviesTable extends Migration
             $table->timestamps();
             $table->string('picture_url');
         });
+
+        if (DB::getDriverName() !== 'mysql') {
+            Schema::table('schedules', function (Blueprint $table) {
+                $table->foreign('movie_id')->references('id')->on('movies');
+            });
+        }
     }
 
     /**
